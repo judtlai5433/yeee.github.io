@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    background-color: #F4F4F4;
+}
+.wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 20px;
+}
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid #224232;
+    position: absolute;
+    transform: rotate(0deg);
+    transition: transform 4s ease-out;
+}
+.pointer {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 30px solid #f00; /* 改成 border-top */
+    position: absolute;
+    top: 0; /* 將指針放到轉盤頂部 */
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%); /* 水平居中，且稍微往上移讓它重疊在轉盤邊緣 */
+    z-index: 2; /* 確保指針位於轉盤之上 */
+}
+
+
+.controls {
+    text-align: center;
+    margin: 20px;
+}
+.item-list {
+    margin-top: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+}
+.item {
+    display: flex;
+    justify-content: space-between;
+    background: #fff;
+    padding: 5px 10px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+}
+.item button {
+    background: #f00;
+    color: #fff;
+    border: none;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+.item button:hover {
+    background: #d00;}

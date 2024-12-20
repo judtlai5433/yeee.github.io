@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>耶晚歡樂小轉盤</title>
+    <link rel="stylesheet" href="7.css">
+</head>
+<body>
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <canvas class="wheel"></canvas>
+    </div>
+    <div class="controls">
+        <input type="text" id="itemInput" placeholder="輸入你的禮物編號">
+        <button id="addItem">新增</button>
+        <button id="spinWheel">愛的魔力轉圈圈</button>
+        <div class="item-list" id="itemList"></div>
+    </div>
+    <audio id="spinSound" src="RPReplay_Final1734626765.mp3"></audio>
+    <script>
+        const wheelCanvas = document.querySelector('.wheel');
+        const ctx = wheelCanvas.getContext('2d');
+        const addItemButton = document.getElementById('addItem');
+        const spinButton = document.getElementById('spinWheel');
+        const itemInput = document.getElementById('itemInput');
+        const itemList = document.getElementById('itemList');
+        const spinSound = document.getElementById('spinSound');
+        const wheelSize = 300;
+        wheelCanvas.width = wheelSize;
+        wheelCanvas.height = wheelSize;
+        let items = [];
+        let currentRotation = 0;
+        function drawWheel() {
+            const sliceAngle = 2 * Math.PI / items.length;
+            ctx.clearRect(0, 0, wheelSize, wheelSize);
+            items.forEach((item, index) => {
+                ctx.beginPath();
+                ctx.moveTo(wheelSize / 2, wheelSize / 2);
+                ctx.arc(wheelSize / 2, wheelSize / 2, wheelSize / 2, index * sliceAngle, (index + 1) * sliceAngle);
+                const colors = ['#C94628', '#BA6A52', '#E29A59', '#D4D6DD']; 
+                ctx.fillStyle = colors[index % colors.length];
+                ctx.fill();
+                ctx.stroke();
+                ctx.save();
+                ctx.translate(wheelSize / 2, wheelSize / 2);
+                ctx.rotate(index * sliceAngle + sliceAngle / 2);
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#224232';
+                ctx.font = '14px Arial';
+                ctx.fillText(item, wheelSize / 4, 5);
+                ctx.restore();
+            });
+        }
+        function updateItemList() {
+            itemList.innerHTML = '';
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = `${item} <button data-index="${index}">刪除</button>`;
+                itemList.appendChild(div);
+            });
+        }
+        itemList.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                const index = e.target.dataset.index;
+                items.splice(index, 1);
+                drawWheel();
+                updateItemList();
+            }
+        });
+        addItemButton.addEventListener('click', () => {
+            const newItem = itemInput.value.trim();
+            if (newItem) {
+                items.push(newItem);
+                itemInput.value = '';
+                drawWheel();
+                updateItemList();
+            }
+        });
+        spinButton.addEventListener('click', () => {
+            if (items.length > 0) {
+                spinSound.play();
+                const randomSpin = Math.floor(Math.random() * 360 + 720); // At least 2 full rotations
+                currentRotation += randomSpin;
+                wheelCanvas.style.transform = `rotate(${currentRotation}deg)`;
+            }
+        });
+        drawWheel();
+    </script>
+</body>
+</html>
